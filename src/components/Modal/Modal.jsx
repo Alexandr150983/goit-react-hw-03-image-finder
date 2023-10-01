@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Overlay, ModalContainer, ModalImage } from './Modal.styled';
 
-class Modal extends Component {
+export class Modal extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
     document.body.classList.add('modal-opened');
@@ -34,5 +34,3 @@ class Modal extends Component {
     );
   }
 }
-
-export default Modal;

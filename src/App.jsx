@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import ImageGallery from 'components/ImageGallery/ImageGallery';
-import Searchbar from 'components/Searchbar/Searchbar';
-import AppContainer from 'App.styled';
-import Button from 'components/Button/Button';
-import CustomLoader from 'components/Loader/Loader';
+import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import { Searchbar } from 'components/Searchbar/Searchbar';
+import { AppContainer } from 'App.styled';
+import { Button } from 'components/Button/Button';
+import { CustomLoader } from 'components/Loader/Loader';
 
-class App extends Component {
+export class App extends Component {
   state = {
     images: [],
     query: '',
@@ -36,18 +36,17 @@ class App extends Component {
         this.setState(prevState => ({
           images: [...prevState.images, ...response.data.hits],
           page: prevState.page + 1,
+          isLoading: false,
         }));
       })
-      .catch(error => this.setState({ error }))
+      .catch(error => this.setState({ error, isLoading: false }))
       .finally(() => this.setState({ isLoading: false }));
   };
 
   handleSearch = query => {
     this.setState({ query, page: 1, images: [] }, this.fetchImages);
   };
-  handleImageClick = largeImageURL => {
-    console.log('Image clicked:', largeImageURL);
-  };
+
   scrollToLoad = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
@@ -67,12 +66,15 @@ class App extends Component {
       <AppContainer>
         <Searchbar onSearch={this.handleSearch} />
         <ImageGallery images={images} />
-        {images.length > 0 && <Button onClick={this.loadMoreImages} />}
-        {isLoading && <CustomLoader />}
+        {isLoading ? (
+          <CustomLoader />
+        ) : (
+          images.length > 0 && <Button onClick={this.loadMoreImages} />
+        )}
         {error && <p>Error: {error.message}</p>}
       </AppContainer>
     );
   }
 }
 
-export default App;
+

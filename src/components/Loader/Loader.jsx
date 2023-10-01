@@ -1,10 +1,9 @@
-import React from 'react';
-import { Puff } from 'react-loader-spinner';
+import { ThreeDots } from 'react-loader-spinner';
 
-const CustomLoader = () => (
+export const CustomLoader = () => (
   <div style={{ textAlign: 'center', margin: '20px' }}>
-    <Puff color="#00BFFF" height={100} width={100} />
+    <div style={{ display: 'inline-block' }}>
+      <ThreeDots color="#00BFFF" height={50} width={50} />
+    </div>
   </div>
 );
-
-export default CustomLoader;

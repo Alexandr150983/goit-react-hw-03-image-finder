@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Modal from 'components/Modal/Modal';
+import { Modal } from 'components/Modal/Modal';
 import { GalleryItem, Image } from './ImageGalleryItem.styled';
 
-class ImageGalleryItem extends Component {
+export class ImageGalleryItem extends Component {
   state = {
     showModal: false,
   };
@@ -38,5 +38,3 @@ class ImageGalleryItem extends Component {
     );
   }
 }
-
-export default ImageGalleryItem;

@@ -7,7 +7,7 @@ import {
   StyledInput,
 } from './Searchbar.styled';
 
-class Searchbar extends Component {
+export class Searchbar extends Component {
   state = {
     query: '',
   };
@@ -29,7 +29,6 @@ class Searchbar extends Component {
             <StyledButtonLabel>Search</StyledButtonLabel>
           </StyledButton>
           <StyledInput
-            className="input"
             type="text"
             autoComplete="off"
             autoFocus
@@ -42,5 +41,3 @@ class Searchbar extends Component {
     );
   }
 }
-
-export default Searchbar;

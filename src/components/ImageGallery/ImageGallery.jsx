@@ -1,8 +1,7 @@
-import React from 'react';
-import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Gallery } from './ImageGallery.styled';
 
-const ImageGallery = ({ images, onImageClick }) => (
+export const ImageGallery = ({ images, onImageClick }) => (
   <Gallery>
     {images.map(image => (
       <ImageGalleryItem
@@ -14,5 +13,3 @@ const ImageGallery = ({ images, onImageClick }) => (
     ))}
   </Gallery>
 );
-
-export default ImageGallery;
