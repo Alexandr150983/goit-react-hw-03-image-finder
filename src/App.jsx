@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { AppContainer } from 'App.styled';
 import { Button } from 'components/Button/Button';
 import { CustomLoader } from 'components/Loader/Loader';
+import { getImages } from 'components/servise/ApiService';
 
 export class App extends Component {
   state = {
@@ -13,30 +13,45 @@ export class App extends Component {
     page: 1,
     isLoading: false,
     error: null,
+    totalHits: 0,
   };
 
-  loadMoreImages = () => {
-    this.setState({ isLoading: true }, () => {
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.page !== prevState.page ||
+      this.state.query !== prevState.query
+    ) {
       this.fetchImages();
-    });
+    }
+  }
+
+  loadMoreImages = () => {
+    const { page, totalHits } = this.state;
+
+    if (page * 12 < totalHits) {
+      this.setState(
+        prevState => ({
+          isLoading: true,
+          page: prevState.page + 1,
+        }),
+        () => {
+          this.fetchImages();
+        }
+      );
+    }
   };
 
   fetchImages = () => {
     const { query, page } = this.state;
-    const apiKey = '38906051-b75951c25e9106fdf3cf1ae5b';
-    const perPage = 12;
 
     this.setState({ isLoading: true });
 
-    axios
-      .get(
-        `https://pixabay.com/api/?q=${query}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=${perPage}`
-      )
+    getImages(query, page)
       .then(response => {
         this.setState(prevState => ({
           images: [...prevState.images, ...response.data.hits],
-          page: prevState.page + 1,
           isLoading: false,
+          totalHits: response.data.totalHits,
         }));
       })
       .catch(error => this.setState({ error, isLoading: false }))
@@ -44,7 +59,7 @@ export class App extends Component {
   };
 
   handleSearch = query => {
-    this.setState({ query, page: 1, images: [] }, this.fetchImages);
+    this.setState({ query, page: 1, images: [], totalHits: 0 });
   };
 
   scrollToLoad = () => {
@@ -54,27 +69,19 @@ export class App extends Component {
     });
   };
 
-  handleLoadMore = () => {
-    this.fetchImages();
-    this.scrollToLoad();
-  };
-
   render() {
-    const { images, isLoading, error } = this.state;
+    const { images, isLoading, error, totalHits } = this.state;
 
     return (
       <AppContainer>
         <Searchbar onSearch={this.handleSearch} />
         <ImageGallery images={images} />
-        {isLoading ? (
-          <CustomLoader />
-        ) : (
-          images.length > 0 && <Button onClick={this.loadMoreImages} />
+        {!isLoading && images.length > 0 && images.length < totalHits && (
+          <Button onClick={this.loadMoreImages} />
         )}
+        {isLoading ? <CustomLoader /> : null}
         {error && <p>Error: {error.message}</p>}
       </AppContainer>
     );
   }
 }
-
-
