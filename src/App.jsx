@@ -26,19 +26,9 @@ export class App extends Component {
   }
 
   loadMoreImages = () => {
-    const { page, totalHits } = this.state;
-
-    if (page * 12 < totalHits) {
-      this.setState(
-        prevState => ({
-          isLoading: true,
-          page: prevState.page + 1,
-        }),
-        () => {
-          this.fetchImages();
-        }
-      );
-    }
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
   };
 
   fetchImages = () => {
